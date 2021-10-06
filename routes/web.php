@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Spatie\Activitylog\Models\Activity;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +19,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/test', function () {
+    ddd(Auth::user()->actions);
+    dd(Activity::all()->last());
+})->middleware(['auth']);
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::get('/profile', function () {
+    return view('profile');
+})->middleware(['auth'])->name('profile');
 
 require __DIR__.'/auth.php';
