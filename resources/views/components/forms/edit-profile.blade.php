@@ -23,7 +23,7 @@
                              id="avatar-preview"
                              width="96px"
                              height="96px"
-                             src="{{ getUserAvatar() }}"
+                             src="{{ auth()->user()->avatar }}"
                              alt="">
                         <div class="ml-4 flex">
                             <div
@@ -70,7 +70,7 @@
                     </label>
                     <dd class="mt-1 text-sm text-gray-900">
                         <input type="text"
-                               name="full_name"
+                               name="name"
                                id="name"
                                class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
                                value="{{ auth()->user()->name ?? '' }}"

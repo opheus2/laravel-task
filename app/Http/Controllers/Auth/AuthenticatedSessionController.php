@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\LoggedIn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -33,18 +34,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $position = Location::get();
+        $location = Location::get();
 
-        // Add login activity log
-        activity('login')
-            ->causedBy(auth()->user())
-            ->event('login')
-            ->withProperties([
-                'ip' => $position->ip,
-                'country' => $position->countryName,
-                'City' => $position->cityName
-            ])
-            ->log('logged in from');
+        event(new LoggedIn(auth()->user(), $location));
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

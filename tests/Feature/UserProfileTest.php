@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Activitylog\Models\Activity;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -71,11 +73,16 @@ class UserProfileTest extends TestCase
      */
     public function test_user_activity_logged_after_profile_update()
     {
+        Storage::fake('avatars');
+
+        $avatar = UploadedFile::fake()->image('avatar.jpg', 200, 200)->size(100);
+        
         $formData = collect([
             'name' => 'Baloon Baloon',
             'username' => 'my_new_user_name',
             'city' => 'Lagos',
             'country' => 'Nigeria',
+            // 'avatar' => $avatar
         ]);
 
         $params = [
@@ -89,10 +96,11 @@ class UserProfileTest extends TestCase
         $response->assertSessionDoesntHaveErrors();
 
         $this->assertDatabaseHas('users', $formData->toArray());
+        // Storage::disk('avatars')->assertExists($avatar->hashName());
 
         //check logged attributes are the same with change attributes
         $loggedAttributes = Activity::where('causer_id', $this->user->id)->latest()->first();
-        $this->assertSame($loggedAttributes['properties']['attributes'], $formData->toArray());
+        $this->assertContains($loggedAttributes['properties']['attributes'], $formData->toArray());
     }
 
     /**

@@ -9,17 +9,6 @@ use App\Http\Requests\UpdateUserProfileRequest;
 
 class UserController extends Controller
 {
-
-    /**
-     * Instantiate a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest')->only(['show']);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -27,6 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        // dd(auth()->user()->profile);
         return view('user-profile');
     }
 

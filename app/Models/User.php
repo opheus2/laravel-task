@@ -33,6 +33,7 @@ class User extends Authenticatable
         'password',
         'gender',
         'headline',
+        'about',
         'avatar',
         'city',
         'country',
@@ -59,6 +60,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['profile_percentage'];
+
     public function getActivityLogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -83,6 +86,13 @@ class User extends Authenticatable
             return url($value);
         }
 
-        return null;
+        return "https://avatar.oxro.io/avatar.svg?name=" . $this->name;
+    }
+
+    public function getProfilePercentageAttribute()
+    {
+        // $count1 = count($this->filterFillableAttributes());
+        // $count2 = count(array_filter($this->attributes));
+        return $this->name;
     }
 }

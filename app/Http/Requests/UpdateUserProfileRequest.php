@@ -27,13 +27,15 @@ class UpdateUserProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:150',
+            'name' => 'sometimes|regex:/^[\pL\s\-]+$/u|max:150',
             'email' => [
+                'sometimes',
                 'email:rfc,filter',
                 Rule::unique('users', 'email')
                     ->ignore(request()->route('profile'))
             ],
             'username' => [
+                'sometimes',
                 'alpha_dash',
                 Rule::unique('users', 'username')
                     ->ignore(request()->route('profile')),
@@ -48,7 +50,7 @@ class UpdateUserProfileRequest extends FormRequest
                     }
                 }
             ],
-            'phone' => 'nullable|string|max:15',
+            'phone' => 'nullable|numeric|min:10|max:15',
             'about' => 'nullable|string|max:255',
             'postal' => 'nullable|string|max:10',
             'city' => 'nullable|string|max:100',
@@ -73,6 +75,13 @@ class UpdateUserProfileRequest extends FormRequest
                 'confirmed',
                 Password::min(8)->mixedCase()
             ]
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.regex' => 'Please fill only letters'
         ];
     }
 }

@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     //User Profile Routes
     Route::resource('profile', UserController::class)
         ->scoped(['profile' => 'username'])
-        ->only(['index', 'show', 'update']);
+        ->only(['index', 'update']);
 });
 
 //Public User Profile view

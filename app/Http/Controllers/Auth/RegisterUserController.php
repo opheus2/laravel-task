@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
+use App\Events\RegisteredUser;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use App\Http\Requests\RegisterRequest;
+use Illuminate\Auth\Events\Registered;
+use App\Providers\RouteServiceProvider;
+use Stevebauman\Location\Facades\Location;
 
 class RegisterUserController extends Controller
 {
@@ -34,17 +36,13 @@ class RegisterUserController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        $fillable = collect($request->validated())->toArray();
+        $fillable = $request->validated();
         $fillable['password'] = Hash::make($request->password);
         $user = User::create($fillable);
 
-        event(new Registered($user));
-
-        // Add user registeration activity log
-        activity('register')
-        ->causedBy($user)
-            ->event('register')
-            ->log('Registered successfully');
+        $location = Location::get();
+        
+        event(new RegisteredUser($user, $location));
 
         Auth::login($user);
 

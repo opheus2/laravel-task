@@ -5,7 +5,9 @@
         </h2>
     </x-slot>
 
-    <div class="py-10" x-data="{ showEditForm: $persist(false) }">
+    <x-toast-message></x-toast-message>
+    <div class="py-10"
+         x-data="{ showEditForm: $persist(false) }">
         <!-- Profile header -->
         <div
              class="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
@@ -13,7 +15,7 @@
                 <div class="flex-shrink-0">
                     <div class="relative">
                         <img class="h-16 w-16 rounded-full"
-                             src="{{getUserAvatar()}}"
+                             src="{{ auth()->user()->avatar }}"
                              width="64"
                              height="64"
                              alt="">
@@ -22,19 +24,18 @@
                     </div>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">{{ auth()->user()->username }}</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">{{ auth()->user()->username }} {{ auth()->user()->profile_percentage }}</h1>
                     <p class="text-sm font-medium text-gray-500">
                         {{ auth()->user()->headline ?? 'Your headline appears here' }}</time></p>
                 </div>
             </div>
             <div
                  class="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
-                <button 
-                    type="button"
-                    x-show="showEditForm"
-                    onclick="toggleModal('modal-id')"
-                    class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
-                        <span><i class="las la-lock"></i></span>
+                <button type="button"
+                        x-show="showEditForm"
+                        onclick="toggleModal('modal-id')"
+                        class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
+                    <span><i class="las la-lock"></i></span>
                     Change Password
                 </button>
                 <button type="button"
@@ -48,11 +49,14 @@
              class="mt-8 max-w-3xl mx-auto grid grid-cols-1 gap-6 sm:px-6 lg:max-w-7xl lg:grid-flow-col-dense lg:grid-cols-3">
             <!-- View/Edit Personal Information-->
             <div class="space-y-6 lg:col-start-1 lg:col-span-2">
-                <section aria-labelledby="applicant-information-title"  x-show="!showEditForm">
+                <section aria-labelledby="applicant-information-title"
+                         x-show="!showEditForm">
                     <!-- View Personal Information Details-->
                     <x-profile-details></x-profile-details>
                 </section>
-                <section aria-labelledby="applicant-information-title" style="margin-top: 0;" x-show="showEditForm">
+                <section aria-labelledby="applicant-information-title"
+                         style="margin-top: 0;"
+                         x-show="showEditForm">
                     <!-- Edit Personal Information Details-->
                     <x-forms.edit-profile></x-forms.edit-profile>
                 </section>
@@ -72,33 +76,23 @@
                         <ul role="list"
                             class="divide-y divide-gray-200 pr-5">
                             @foreach (auth()->user()->latestActivities as $activity)
-                            <li class="py-4">
-                                <div class="flex space-x-3">
-                                    <img class="h-6 w-6 rounded-full"
-                                         src="{{getUserAvatar()}}"
-                                         width="24"
-                                         height="24"
-                                         alt="">
-                                    <div class="flex-1 space-y-1">
-                                        <div class="flex items-center justify-between">
-                                            <h3 class="text-sm font-medium">You</h3>
-                                            <p class="text-sm text-gray-500">{{$activity->created_at->diffForHumans()}}</p>
+                                <li class="py-4">
+                                    <div class="flex space-x-3">
+                                        <img class="h-6 w-6 rounded-full"
+                                             src="{{ auth()->user()->avatar }}"
+                                             width="24"
+                                             height="24"
+                                             alt="">
+                                        <div class="flex-1 space-y-1">
+                                            <div class="flex items-center justify-between">
+                                                <h3 class="text-sm font-medium">You</h3>
+                                                <p class="text-sm text-gray-500">
+                                                    {{ $activity->created_at->diffForHumans() }}</p>
+                                            </div>
+                                            <x-activity-log :log="$activity" />
                                         </div>
-                                        @if ($activity->event == 'login')
-                                            <p class="text-sm text-gray-500">{{$activity->description}}</p>
-                                            {!! formatActivityLog($activity->properties) !!}
-                                        @elseif ($activity->event == 'register')
-                                            <p class="text-sm text-gray-500 flex items-center">
-                                                {{$activity->description}}
-                                                <span class="pl-3 inline-flex"><img style="max-width: 20px;" src="https://img.icons8.com/external-vitaliy-gorbachev-blue-vitaly-gorbachev/60/000000/external-confetti-japanese-wedding-vitaliy-gorbachev-blue-vitaly-gorbachev.png"/></span>
-                                            </p> 
-                                        @else
-                                            <p class="text-sm text-gray-500">{{$activity->description}}</p>
-                                            {!! formatActivityLog($activity->properties) !!}
-                                        @endif
                                     </div>
-                                </div>
-                            </li>
+                                </li>
                             @endforeach
                             <p class="py-4 text-sm text-center text-gray-500">No more activity...</p>
                         </ul>
@@ -111,10 +105,10 @@
     <x-forms.change-password></x-forms.change-password>
 </x-app-layout>
 <script>
-function toggleModal(modalID) {
-    document.getElementById(modalID).classList.toggle("hidden");
-    document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
-    document.getElementById(modalID).classList.toggle("flex");
-    document.getElementById(modalID + "-backdrop").classList.toggle("flex");
-}
+    function toggleModal(modalID) {
+        document.getElementById(modalID).classList.toggle("hidden");
+        document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
+        document.getElementById(modalID).classList.toggle("flex");
+        document.getElementById(modalID + "-backdrop").classList.toggle("flex");
+    }
 </script>
