@@ -55,7 +55,7 @@
                         <input type="text"
                                name="headline"
                                id="headline"
-                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
                                value="{{ auth()->user()->headline ?? '' }}"
                                placeholder="Headline">
                     </dd>
@@ -72,7 +72,7 @@
                         <input type="text"
                                name="full_name"
                                id="name"
-                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
                                value="{{ auth()->user()->name ?? '' }}"
                                placeholder="Full Name">
                     </dd>
@@ -89,7 +89,7 @@
                         <input type="text"
                                name="username"
                                id="username"
-                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
                                value="{{ auth()->user()->username ?? '' }}"
                                placeholder="Username">
                     </dd>
@@ -107,7 +107,7 @@
                                name="email"
                                id="email"
                                autocomplete="email"
-                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
                                value="{{ auth()->user()->email ?? '' }}"
                                placeholder="Email Address">
                     </dd>
@@ -124,7 +124,7 @@
                                name="phone"
                                id="phone"
                                autocomplete="phone"
-                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
                                value="{{ auth()->user()->phone ?? '' }}"
                                placeholder="Phone">
                     </dd>
@@ -140,7 +140,7 @@
                     <dd class="mt-1 text-sm text-gray-900">
                         <select id="gender"
                                 name="gender"
-                                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md ">
+                                class=" max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md ">
                             <option value="male"
                                     {{ auth()->user()->gender == 'male' ? 'selected' : '' }}>Male</option>
                             <option value="female"
@@ -162,7 +162,7 @@
                         <input type="text"
                                name="city"
                                id="city"
-                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
                                value="{{ auth()->user()->city ?? '' }}"
                                placeholder="City">
                     </dd>
@@ -179,7 +179,7 @@
                         <select id="country"
                                 name="country"
                                 autocomplete="country"
-                                class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-100">
+                                class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-100">
                             @foreach (get_country_list() as $country)
                                 <option value="{{ $country }}"
                                         {{ $country == auth()->user()->country ? 'selected' : '' }}>
@@ -200,7 +200,7 @@
                         <input type="text"
                                name="postal"
                                id="postal"
-                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                               class="max-w-lg block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
                                value="{{ auth()->user()->postal ?? '' }}"
                                placeholder="Postal Code">
                     </dd>

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateUserProfileRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UpdateUserProfileRequest;
 
 class UserController extends Controller
 {
@@ -43,13 +44,16 @@ class UserController extends Controller
         $profile->fill($request->validated());
 
         if($request->has('avatar') && !empty($request->file('avatar'))) {
-            $path = $request->file('avatar')->store('avatars');
-            $profile->avatar = $path;
+            $profile->avatar = $request->file('avatar')->store('avatars');
+        }
+
+        if($request->has('password')) {
+            $profile->password = Hash::make($request->password);
         }
 
         $profile->save();
 
-        return redirect()->route('profile.index')->with('sucess', 'Profile Updated!');
+        return redirect()->route('profile.index')->with('success', 'Profile Updated!');
     }
 
     /**
