@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
-class RegisteredUserController extends Controller
+class RegisterUserController extends Controller
 {
     /**
      * Display the registration view.
@@ -39,6 +39,12 @@ class RegisteredUserController extends Controller
         $user = User::create($fillable);
 
         event(new Registered($user));
+
+        // Add user registeration activity log
+        activity('register')
+        ->causedBy($user)
+            ->event('register')
+            ->log('Registered successfully');
 
         Auth::login($user);
 

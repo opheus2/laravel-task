@@ -8,6 +8,8 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Spatie\Activitylog\ActivitylogServiceProvider;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -30,6 +32,8 @@ class User extends Authenticatable
         'email',
         'password',
         'gender',
+        'headline',
+        'avatar',
         'city',
         'country',
         'postal',
@@ -62,6 +66,23 @@ class User extends Authenticatable
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
             ->useLogName('profile')
-            ->setDescriptionForEvent(fn (string $eventName) => "{$eventName} profile");
+            ->setDescriptionForEvent(fn (string $eventName) => "{$eventName} your profile");
+    }
+
+    public function latestActivities(): MorphMany
+    {
+        return $this->morphMany(
+            ActivitylogServiceProvider::determineActivityModel(),
+            'causer'
+        )->latest();
+    }
+
+    public function getAvatarAttribute($value)
+    {
+        if (!empty($value)) {
+            return url($value);
+        }
+
+        return null;
     }
 }

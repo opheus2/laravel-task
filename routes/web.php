@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Spatie\Activitylog\Models\Activity;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,17 +20,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', function () {
-    ddd(Auth::user()->actions);
-    dd(Activity::all()->last());
-})->middleware(['auth']);
+Route::middleware('auth')->group(function () {
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::get('/profile', function () {
-    return view('profile');
-})->middleware(['auth'])->name('profile');
+    //User Profile Routes
+    Route::resource('profile', UserController::class)
+        ->scoped(['profile' => 'username'])
+        ->only(['index', 'show', 'update']);
+});
+
+//Public User Profile view
+Route::resource('profile', UserController::class)
+    ->scoped(['profile' => 'username'])
+    ->only(['show']);
 
 require __DIR__.'/auth.php';
