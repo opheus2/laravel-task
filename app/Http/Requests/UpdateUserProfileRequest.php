@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserProfileRequest extends FormRequest
@@ -54,26 +52,14 @@ class UpdateUserProfileRequest extends FormRequest
             'about' => 'nullable|string|max:255',
             'postal' => 'nullable|string|max:10',
             'city' => 'nullable|string|max:100',
-            'gender' => 'nullable|string',
+            'gender' => [
+                'nullable',
+                Rule::in(['male', 'female'])
+            ],
             'avatar' => 'nullable|image|mimes:jpeg,gif,png,jpg|max:1024',
             'country' => [
                 'string',
                 Rule::in(get_country_list())
-            ],
-            'current_password' => [
-                'nullable',
-                'string',
-                function ($attribute, $value, $fail) {
-                    if (!Hash::check($value, auth()->user()->password)) {
-                        $fail('Your current password does not match!');
-                    }
-                }
-            ],
-            'password' => [
-                'sometimes',
-                'required_with:current_password',
-                'confirmed',
-                Password::min(8)->mixedCase()
             ]
         ];
     }

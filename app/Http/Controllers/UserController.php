@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PasswordUpdateRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UpdateUserProfileRequest;
 
@@ -16,7 +16,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        // dd(auth()->user()->profile);
         return view('user-profile');
     }
 
@@ -33,11 +32,11 @@ class UserController extends Controller
 
         $profile->fill($request->validated());
 
-        if($request->has('avatar') && !empty($request->file('avatar'))) {
+        if ($request->has('avatar') && !empty($request->file('avatar'))) {
             $profile->avatar = $request->file('avatar')->store('avatars');
         }
 
-        if($request->has('password')) {
+        if ($request->has('password')) {
             $profile->password = Hash::make($request->password);
         }
 
@@ -47,26 +46,19 @@ class UserController extends Controller
     }
 
     /**
-     * Show the specified resource.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\User  $profile
      * @return \Illuminate\Http\Response
      */
-    public function show(User $profile)
+    public function updatePassword(PasswordUpdateRequest $request, User $user)
     {
-        // return view('public.profile')->with('profile', $profile);
-        return response()->json($profile);
-    }
+        $this->authorize('update', $user);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('profile.index')->with('success', 'Password Updated!');
     }
 }

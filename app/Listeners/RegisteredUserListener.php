@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Models\User;
+use App\Notifications\RegistrationNotification;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -37,5 +38,7 @@ class RegisteredUserListener implements ShouldQueue, ShouldBeUnique
                 'City' => $event->location->cityName
             ])
             ->log('Registered successfully');
+
+        $event->user->notify(new RegistrationNotification);
     }
 }

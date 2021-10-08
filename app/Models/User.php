@@ -80,10 +80,10 @@ class User extends Authenticatable
         )->latest();
     }
 
-    public function getAvatarAttribute($value)
+    public function getAvatarUrlAttribute()
     {
-        if (!empty($value)) {
-            return url($value);
+        if (!empty($this->avatar)) {
+            return url($this->avatar);
         }
 
         return "https://avatar.oxro.io/avatar.svg?name=" . $this->name;

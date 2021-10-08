@@ -8,8 +8,7 @@
 
             <!-- Change Password Form -->
 
-            <form action="{{route('profile.update', ['profile' => auth()->user()->username])}}" method="POST">
-                @method('put')
+            <form action="{{route('profile.password', ['user' => auth()->user()->id])}}" method="POST">
                 @csrf
                 <div
                      class="mt-6 flow-root h-70 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full overflow-y-auto">

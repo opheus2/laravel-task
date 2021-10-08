@@ -17,6 +17,7 @@ class UserProfileTest extends TestCase
 
     const ROUTE_VIEW_PROFILE = 'profile.index';
     const ROUTE_UPDATE_PROFILE = 'profile.update';
+    const ROUTE_UPDATE_PROFILE_PASSWORD = 'profile.password';
 
     private $user;
 
@@ -35,12 +36,13 @@ class UserProfileTest extends TestCase
     public function test_profile_screen()
     {
         $response = $this->actingAs($this->user)->get(route(self::ROUTE_VIEW_PROFILE));
-
         $response->assertStatus(200);
+        $response->assertSeeText('Profile');
+        $response->assertSeeText($this->user->name);
     }
 
     /**
-     * A basic feature test example.
+     * Test user can update profile.
      *
      * @return void
      */
@@ -67,22 +69,17 @@ class UserProfileTest extends TestCase
 
 
     /**
-     * A basic feature test example.
+     * Test activity logging.
      *
      * @return void
      */
     public function test_user_activity_logged_after_profile_update()
     {
-        Storage::fake('avatars');
-
-        $avatar = UploadedFile::fake()->image('avatar.jpg', 200, 200)->size(100);
-        
         $formData = collect([
             'name' => 'Baloon Baloon',
             'username' => 'my_new_user_name',
             'city' => 'Lagos',
-            'country' => 'Nigeria',
-            // 'avatar' => $avatar
+            'country' => 'Nigeria'
         ]);
 
         $params = [
@@ -96,15 +93,14 @@ class UserProfileTest extends TestCase
         $response->assertSessionDoesntHaveErrors();
 
         $this->assertDatabaseHas('users', $formData->toArray());
-        // Storage::disk('avatars')->assertExists($avatar->hashName());
 
         //check logged attributes are the same with change attributes
         $loggedAttributes = Activity::where('causer_id', $this->user->id)->latest()->first();
-        $this->assertContains($loggedAttributes['properties']['attributes'], $formData->toArray());
+        $this->assertSame($loggedAttributes['properties']['attributes'], $formData->toArray());
     }
 
     /**
-     * A basic feature test example.
+     * Test changing password with correct info.
      *
      * @return void
      */
@@ -117,12 +113,12 @@ class UserProfileTest extends TestCase
         ]);
 
         $params = [
-            'profile' => $this->user->username
+            'user' => $this->user->id
         ];
 
         $data = $formData->merge($params);
 
-        $response = $this->actingAs($this->user)->put(route(self::ROUTE_UPDATE_PROFILE, $data->all()));
+        $response = $this->actingAs($this->user)->post(route(self::ROUTE_UPDATE_PROFILE_PASSWORD, $data->all()));
 
         $response->assertRedirect();
         $response->assertSessionDoesntHaveErrors();
@@ -133,7 +129,7 @@ class UserProfileTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * Test wrong current input
      *
      * @return void
      */
@@ -146,12 +142,12 @@ class UserProfileTest extends TestCase
         ]);
 
         $params = [
-            'profile' => $this->user->username
+            'user' => $this->user->id
         ];
 
         $data = $formData->merge($params);
 
-        $response = $this->actingAs($this->user)->put(route(self::ROUTE_UPDATE_PROFILE, $data->all()));
+        $response = $this->actingAs($this->user)->post(route(self::ROUTE_UPDATE_PROFILE_PASSWORD, $data->all()));
 
         $response->assertRedirect();
         $response->assertSessionHasErrors(['current_password']);

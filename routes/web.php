@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Spatie\Activitylog\Models\Activity;
 use App\Http\Controllers\UserController;
 
 /*
@@ -27,14 +26,10 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     //User Profile Routes
+    Route::post('profile/{user}/password', [UserController::class, 'updatePassword'])->name('profile.password');
     Route::resource('profile', UserController::class)
         ->scoped(['profile' => 'username'])
         ->only(['index', 'update']);
 });
-
-//Public User Profile view
-Route::resource('profile', UserController::class)
-    ->scoped(['profile' => 'username'])
-    ->only(['show']);
 
 require __DIR__.'/auth.php';

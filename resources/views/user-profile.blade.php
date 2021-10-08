@@ -15,7 +15,7 @@
                 <div class="flex-shrink-0">
                     <div class="relative">
                         <img class="h-16 w-16 rounded-full"
-                             src="{{ auth()->user()->avatar }}"
+                             src="{{ auth()->user()->avatar_url }}"
                              width="64"
                              height="64"
                              alt="">
@@ -79,7 +79,7 @@
                                 <li class="py-4">
                                     <div class="flex space-x-3">
                                         <img class="h-6 w-6 rounded-full"
-                                             src="{{ auth()->user()->avatar }}"
+                                             src="{{ auth()->user()->avatar_url }}"
                                              width="24"
                                              height="24"
                                              alt="">

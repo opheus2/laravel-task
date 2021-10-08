@@ -23,7 +23,7 @@
                     Username
                 </dt>
                 <dd class="mt-1 text-sm text-gray-900">
-                    @ {{ auth()->user()->username }}
+                    <span>@</span>{{ auth()->user()->username }}
                 </dd>
             </div>
             <div class="sm:col-span-1">

@@ -19,11 +19,11 @@
                 <div class="sm:col-span-1"
                      x-data="showImage()">
                     <dd class="mt-1 flex items-center">
-                        <img class="inline-block h-24 w-24 rounded-full"
+                        <img class="inline-block h-12 w-12 rounded-full"
                              id="avatar-preview"
-                             width="96px"
-                             height="96px"
-                             src="{{ auth()->user()->avatar }}"
+                             width="48"
+                             height="48"
+                             src="{{ auth()->user()->avatar_url }}"
                              alt="">
                         <div class="ml-4 flex">
                             <div
