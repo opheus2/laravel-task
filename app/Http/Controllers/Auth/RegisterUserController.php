@@ -41,10 +41,11 @@ class RegisterUserController extends Controller
         $user = User::create($fillable);
 
         $location = Location::get();
-        
-        event(new RegisteredUser($user, $location));
 
         Auth::login($user);
+
+        event(new Registered($user));
+        event(new RegisteredUser($user, $location));
 
         return redirect(RouteServiceProvider::HOME);
     }

@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Events\LoggedIn;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -20,12 +22,16 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen()
     {
+        Event::fake();
+
         $user = User::factory()->create();
 
         $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'Password22$',
         ]);
+
+        Event::assertDispatched(LoggedIn::class);
 
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);

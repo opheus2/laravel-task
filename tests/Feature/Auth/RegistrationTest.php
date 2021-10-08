@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Events\RegisteredUser;
 use Tests\TestCase;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 class RegistrationTest extends TestCase
 {
@@ -19,6 +22,8 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register()
     {
+        Event::fake();
+
         $response = $this->post('/register', [
             'name' => 'Test User',
             'username' => 'test_user',
@@ -27,6 +32,10 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'Password22$',
             'confirm_age' => true,
         ]);
+
+        // Assert the event was dispatched
+        Event::assertDispatched(RegisteredUser::class);
+        Event::assertDispatched(Registered::class);
 
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);

@@ -16,12 +16,13 @@ class RegisteredUser
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
+    public $location;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, $location)
+    public function __construct(User $user, $location = [])
     {
         $this->user = $user;
         $this->location = $location;

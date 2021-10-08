@@ -60,8 +60,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['profile_percentage'];
-
     public function getActivityLogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -80,19 +78,12 @@ class User extends Authenticatable
         )->latest();
     }
 
-    public function getAvatarUrlAttribute()
+    public function getAvatarUrlAttribute(): string
     {
         if (!empty($this->avatar)) {
             return url($this->avatar);
         }
 
         return "https://avatar.oxro.io/avatar.svg?name=" . $this->name;
-    }
-
-    public function getProfilePercentageAttribute()
-    {
-        // $count1 = count($this->filterFillableAttributes());
-        // $count2 = count(array_filter($this->attributes));
-        return $this->name;
     }
 }
